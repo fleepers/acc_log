@@ -13,7 +13,6 @@ function sendData() {
     const data = accommodationText.value.trim();
 
     if (data) {
-        // Send data to the server using AJAX, e.g. using the fetch API
         fetch('insert.php', {
             method: 'POST',
             body: JSON.stringify({ statement: data }),
@@ -27,11 +26,28 @@ function sendData() {
                 accommodationList.appendChild(li);
                 accommodationText.value = '';
             } else {
-                alert('Error: Unable to save the data.');
+                alert('Error: ' + data.error);
             }
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.log('Error:', error);
         });
     }
 }
+
+function fetchAccommodations() {
+    fetch('fetch.php')
+        .then((response) => response.json())
+        .then((data) => {
+            data.forEach((item) => {
+                const li = document.createElement('li');
+                li.textContent = item.statement;
+                accommodationList.appendChild(li);
+            });
+        })
+        .catch((error) => {
+            console.log('Error:', error);
+        });
+}
+
+fetchAccommodations();
