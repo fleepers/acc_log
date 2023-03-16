@@ -8,13 +8,13 @@ function sendData() {
     const data = accommodationText.value.trim();
 
     if (data) {
-        // Send data to the server using AJAX, e.g. using the fetch API
-        const formData = new FormData();
-        formData.append('statement', data);
-
+        // Send data to the server using AJAX, e.g., using the fetch API
         fetch('insert.php', {
             method: 'POST',
-            body: formData,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ statement: data }),
         })
         .then((response) => response.json())
         .then((data) => {
@@ -32,6 +32,7 @@ function sendData() {
         });
     }
 }
+
 
 
 function fetchAccommodations() {

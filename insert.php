@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', '0');
+error_reporting(0);
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -15,7 +18,11 @@ if ($conn->connect_error) {
     die(json_encode(array("success" => false, "error" => "Connection failed: " . $conn->connect_error)));
 }
 
-$statement = $_POST['statement'];
+// Get the JSON data from the request body
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+
+$statement = $data['statement'];
 
 if (empty($statement)) {
     echo json_encode(array("success" => false, "error" => "Invalid input data"));
