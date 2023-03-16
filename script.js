@@ -1,22 +1,20 @@
-const accommodationText = document.getElementById('accommodation-text');
-const sendBtn = document.getElementById('send-btn');
-const accommodationList = document.getElementById('accommodation-list');
+const accommodationList = document.getElementById('accommodationList');
+const accommodationText = document.getElementById('accommodationText');
+const sendButton = document.getElementById('sendButton');
 
-sendBtn.addEventListener('click', sendData);
-accommodationText.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        sendData();
-    }
-});
+sendButton.addEventListener('click', sendData);
 
 function sendData() {
     const data = accommodationText.value.trim();
 
     if (data) {
+        // Send data to the server using AJAX, e.g. using the fetch API
+        const formData = new FormData();
+        formData.append('statement', data);
+
         fetch('insert.php', {
             method: 'POST',
-            body: JSON.stringify({ statement: data }),
-            headers: { 'Content-Type': 'application/json' },
+            body: formData,
         })
         .then((response) => response.json())
         .then((data) => {
@@ -26,7 +24,7 @@ function sendData() {
                 accommodationList.appendChild(li);
                 accommodationText.value = '';
             } else {
-                alert('Error: ' + data.error);
+                alert('Error: Unable to save the data.');
             }
         })
         .catch((error) => {
@@ -34,6 +32,7 @@ function sendData() {
         });
     }
 }
+
 
 function fetchAccommodations() {
     fetch('fetch.php')
