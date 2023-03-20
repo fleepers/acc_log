@@ -5,6 +5,10 @@ document.getElementById('input-text').addEventListener('keypress', function (e) 
     }
 });
 
+var intervalId = setInterval(function() {
+  console.log("refreshed table")
+  refreshTable();
+}, 5000);
 
 function sendData() {
     const textData = document.getElementById('input-text').value;
