@@ -1,53 +1,49 @@
-const accommodationList = document.getElementById('accommodationList');
-const accommodationText = document.getElementById('accommodationText');
-const sendButton = document.getElementById('sendButton');
-
-sendButton.addEventListener('click', sendData);
+document.getElementById('send-btn').addEventListener('click', sendData);
+document.getElementById('input-text').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sendData();
+    }
+});
 
 function sendData() {
-    const data = accommodationText.value.trim();
+    const textData = document.getElementById('input-text').value;
+    console.log(textData);
 
-    if (data) {
-        // Send data to the server using AJAX, e.g., using the fetch API
-        fetch('insert.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ statement: data }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                const li = document.createElement('li');
-                li.textContent = data.statement;
-                accommodationList.appendChild(li);
-                accommodationText.value = '';
-            } else {
-                alert('Error: Unable to save the data.');
-            }
-        })
-        .catch((error) => {
-            console.log('Error:', error);
-        });
+    if (textData === '') {
+        alert('Please enter text data.');
+        return;
     }
+
+    fetch('save_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text_data: textData })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.getElementById('input-text').value = '';
+            refreshTable();
+        } else {
+            alert('save_data Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
 }
 
-
-
-function fetchAccommodations() {
-    fetch('fetch.php')
-        .then((response) => response.json())
-        .then((data) => {
-            data.forEach((item) => {
-                const li = document.createElement('li');
-                li.textContent = item.statement;
-                accommodationList.appendChild(li);
-            });
-        })
-        .catch((error) => {
-            console.log('Error:', error);
-        });
+function refreshTable() {
+    fetch('fetch_data.php')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('table-container').innerHTML = data;
+    })
+    .catch(error => {
+        console.error('refresh_table Error:', error);
+        alert('An error occurred while refreshing the table. Please try again.');
+    });
 }
-
-fetchAccommodations();
