@@ -5,36 +5,31 @@ document.getElementById('input-text').addEventListener('keypress', function (e) 
     }
 });
 
+
 function sendData() {
     const textData = document.getElementById('input-text').value;
     console.log(textData);
-
-    if (textData === '') {
-        alert('Please enter text data.');
-        return;
-    }
-
-    fetch('save_data.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text_data: textData })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            document.getElementById('input-text').value = '';
-            refreshTable();
-        } else {
-            alert('save_data Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-    });
-}
+  
+    // Create XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+  
+    // Define the request
+    xhr.open('POST', 'save_data.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  
+    // Handle the response
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        console.log('Data sent successfully');
+      } else {
+        console.error('An error occurred');
+      }
+    };
+  
+    // Send the request
+    xhr.send('textData=' + textData);
+    refreshTable();
+  }
 
 function refreshTable() {
     fetch('fetch_data.php')
