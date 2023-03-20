@@ -10,7 +10,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT id, text_data, date FROM accommodation_log";
+if (isset($_POST['FilterData'])) {
+    $sql = $_POST['FilterData'];
+    error_log("Received: " . $sql);
+  } else {
+    $sql = "SELECT id, text_data, date FROM accommodation_log";
+  }
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

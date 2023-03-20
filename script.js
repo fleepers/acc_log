@@ -1,14 +1,49 @@
+window.onload = (event) => {
+  console.log("page is fully loaded");
+  updateFilters("SELECT id, text_data, date FROM accommodation_log");
+};
+
 document.getElementById('send-btn').addEventListener('click', sendData);
-document.getElementById('input-text').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        sendData();
-    }
-});
+document.getElementById('filter-update').addEventListener('click', inputFilterData);
 
 var intervalId = setInterval(function() {
   console.log("refreshed table")
   refreshTable();
-}, 5000);
+}, 2000);
+
+function inputFilterData(){
+  var output = "";
+
+  if (document.getElementById('filter-update').value.length != 0){
+    output = "SELECT * FROM accommodation_log WHERE text_data LIKE '%" + document.getElementById('filter-update').value + "%';"
+  }
+
+  updateFilters(output);
+}
+
+function updateFilters(x){
+
+    // Create XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+  
+    // Define the request
+    xhr.open('POST', 'fetch_data.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  
+    // Handle the response
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        console.log('Data sent successfully');
+      } else {
+        console.error('An error occurred');
+      }
+    };
+  
+    // Send the request
+    xhr.send('FilterData=' + x);
+    refreshTable();
+
+}
 
 function sendData() {
     const textData = document.getElementById('input-text').value;

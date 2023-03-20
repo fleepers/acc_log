@@ -12,8 +12,10 @@
     </div>
 
     <div>
-        <input type="text" id="input-text" placeholder="Enter text data">
+        <textarea id="input-text" placeholder="Enter text data"></textarea>
         <button id="send-btn">Send</button>
+        <input type="text" id="filtersearch" placeholder="Search containing text">
+        <button id="filter-update">Update Filters</button>
     </div>
 
     <script src="script.js"></script>
