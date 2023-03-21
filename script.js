@@ -7,7 +7,6 @@ document.getElementById('send-btn').addEventListener('click', sendData);
 document.getElementById('filter-update').addEventListener('click', inputFilterData);
 document.getElementById('filter-clear').addEventListener('click', clearFilterData);
 document.getElementById("export-xlsx").addEventListener("click", exportTableToExcel);
-document.getElementById("export-word").addEventListener("click", exportTableToWord);
 
 
 
@@ -16,6 +15,9 @@ function clearFilterData(){
   document.getElementById('filter-date-start').value = "";
   document.getElementById('filter-date-end').value = "";
   inputFilterData();
+  document.getElementById('whatsgoingon').style.backgroundColor = "green";
+  document.getElementById('whatsgoingon').style.Color = "black";
+  document.getElementById('infotext').innerText = "Filters cleared";
 }
 
 function inputFilterData() {
@@ -62,6 +64,9 @@ function inputFilterData() {
   }
 
   console.log(output);
+  document.getElementById('whatsgoingon').style.backgroundColor = "green";
+  document.getElementById('whatsgoingon').style.Color = "black";
+  document.getElementById('infotext').innerText = "Filters updated";
   updateFilters(output);
 }
 
@@ -80,6 +85,7 @@ function updateFilters(x) {
       console.log('Data sent successfully');
       // Update the table with the new data
       document.getElementById('table-container').innerHTML = xhr.responseText;
+      scrollToBottom();
     } else {
       console.error('An error occurred');
     }
@@ -111,6 +117,9 @@ function sendData() {
       xhr.onload = function () {
         if (xhr.status === 200) {
           console.log('Data sent successfully');
+          document.getElementById('whatsgoingon').style.backgroundColor = "green";
+          document.getElementById('whatsgoingon').style.Color = "black";
+          document.getElementById('infotext').innerText = "Log Entered";
           refreshTable();        
         } else {
           console.error('An error occurred');
@@ -176,7 +185,7 @@ function exportTableToExcel() {
   // Set the column widths
   ws['!cols'] = [
     { wch: 10 }, // ID column
-    { wch: 50 }, // Text Data column
+    { wch: 50, wrapText: true }, // Text Data column
     { wch: 20 }, // Date column
   ];
 
@@ -199,6 +208,9 @@ function exportTableToExcel() {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  document.getElementById('whatsgoingon').style.backgroundColor = "green";
+  document.getElementById('whatsgoingon').style.Color = "black";
+  document.getElementById('infotext').innerText = "Spreadsheet Exported";
 }
 
 

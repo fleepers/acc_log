@@ -1,11 +1,86 @@
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+body{
+    background-color: rgb(219, 219, 219);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+button{
+    transition:background-color 0.2s, color 0.2s;
+    cursor:pointer;
+}
+
+button:hover{
+    background-color: white;
+}
+
 table {
     border-collapse: collapse;
     width:100%;
 }
+#inputside{
+    display:inline-block;
+    position: absolute;
+    width:46%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+#inputside button{
+    padding:20px;
+    border-radius: 20px;
+}
+#textgen{
+    display:flex;
+    flex-direction: column;
+    
+}
 #table-container{
-    height: 300px;
+    height: 95vh;
     overflow-y: scroll;
+    display: inline-block;
     width:50%;
+    background-color: white;
+}
+#filters{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 40px;
+}
+#filters button{
+    margin-bottom: 10px;
+    border-radius: 20px;
+}
+#filters input{
+    margin-bottom: 10px;
+}
+#filtersearch{
+    height:30px;
+}
+#export-xlsx:hover{
+    background-color: greenyellow;
+}
+#send-btn:hover{
+    background-color: rgb(73, 197, 83);
+}
+#whatsgoingon{
+    width:100%;
+    height:10vh;
+    text-align: center;
+    background-color: rgb(219, 219, 219);
+    color: rgb(219, 219, 219);
+    transition: color 0.5s, background-color 0.5s;
+    border-radius: 20px;
+}
+#whatsgoingon p{
+    font-size: 30px;
 }
 th, td {
     border: 1px solid black;
@@ -16,6 +91,7 @@ th {
     background-color: #f2f2f2;
 }
 textarea{
-    width:25%;
+    width:100%;
     height:300px;
+    margin-bottom: 10px;
 }
