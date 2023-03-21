@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record Logging</title>
+    <title>Record Logging (Testing)</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.14.2/js/msal-browser.min.js"></script>
 
 </head>
 <body>
-    <div id="table-container">
-        <?php include 'fetch_data.php'; ?>
+
+    <div id="loginbox">
+        <button id="login-btn" onclick="login()">Login</button>
     </div>
 
-    <div id="inputside">
+    <div id="postlogin">
+
+        <div id="table-container">
+            <?php include 'fetch_data.php'; ?>
+        </div>
+
+        <div id="inputside">
 
         <div id="textgen">
             <textarea id="input-text" placeholder="Enter text data"></textarea>
@@ -33,6 +42,7 @@
             <div id="whatsgoingon">
                 <p id="infotext">test</p>
             </div>
+
         </div>
         
     </div>

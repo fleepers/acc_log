@@ -1,3 +1,17 @@
+const clientId = "efb2cb7a-c639-4dc2-93db-f85ff21273bf"
+const tokenUrl = "https://login.microsoftonline.com/9431e0b9-00a8-40f7-a077-5f0920325f6c/oauth2/v2.0/token";
+const authority = "https://login.microsoftonline.com/9431e0b9-00a8-40f7-a077-5f0920325f6c/";
+var authtokenfound = "";
+
+const msalConfig = {
+  auth: {
+    clientId: clientId,
+    authority: authority,
+  }
+};
+
+const msalInstance = new msal.PublicClientApplication(msalConfig);
+
 window.onload = (event) => {
   console.log("page is fully loaded");
   updateFilters("SELECT usersub, text_data, date FROM accommodation_log");
@@ -12,11 +26,48 @@ function clearFilterData(){
   document.getElementById('filtersearch').value = "";
   document.getElementById('filter-date-start').value = "";
   document.getElementById('filter-date-end').value = "";
+  document.getElementById("filter-user").value = "";
   inputFilterData();
   document.getElementById('whatsgoingon').style.backgroundColor = "green";
   document.getElementById('whatsgoingon').style.Color = "black";
   document.getElementById('infotext').innerText = "Filters cleared";
 }
+
+async function login(){
+
+  const loginRequest = { scopes: ["https://graph.microsoft.com/.default"] };
+
+  try {
+      const loginResponse = await msalInstance.loginPopup(loginRequest);
+      const accessToken = loginResponse.accessToken;
+
+      authtokenfound = accessToken;
+      //console.log(authtokenfound);
+      document.getElementById('loginbox').remove();
+      document.getElementById('postlogin').style.visibility = "visible";
+      document.getElementById('postlogin').style.pointerEvents = "all";
+      
+      } catch (error) {
+          console.error(error);
+          alert("Log-in failed. Error code: " + error);
+      }
+}
+
+async function fetchusername(token) {
+  // Make the API request and wait
+  const response = await fetch("https://graph.microsoft.com/v1.0/me", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  // wait again for the response and extract the name
+  const data = await response.json();
+  const displayName = data.userPrincipalName;
+
+  // Return the display name as a string
+  return displayName.split('@')[0];
+  }
 
 function inputFilterData() {
   var output = "";
@@ -107,9 +158,9 @@ function scrollToBottom() {
   container.scrollTop = container.scrollHeight;
 }
 
-function sendData() {
+async function sendData() {
     const textData = document.getElementById('input-text').value;
-    const user = "tteven";
+    const user = await fetchusername(authtokenfound);
 
     if (document.getElementById('input-text').value.length > 0){
       console.log(textData);
