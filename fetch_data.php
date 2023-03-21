@@ -24,7 +24,8 @@ if ($result->num_rows > 0) {
     echo "<tr><th>ID</th><th>Text Data</th><th>Date</th></tr>";
 
     while($row = $result->fetch_assoc()) {
-        echo "<tr><td>" . $row["id"] . "</td><td>" . $row["text_data"] . "</td><td>" . $row["date"] . "</td></tr>";
+        $text_data = nl2br(htmlspecialchars($row["text_data"]));
+        echo "<tr><td>" . $row["id"] . "</td><td>" . $text_data . "</td><td>" . $row["date"] . "</td></tr>";
     }
 
     echo "</table>";
