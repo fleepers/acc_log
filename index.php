@@ -22,6 +22,7 @@
 
         <div id="filters">
             <p>Filters</p>
+            <input type="text" id="filter-user" placeholder="Filter by username (eg. tteven, staylor)">
             <input type="text" id="filtersearch" placeholder="Search containing text">
             <label>Date start:<input type="date" id="filter-date-start"></label>
             <label>Date end:<input type="date" id="filter-date-end"></label>

@@ -1,14 +1,12 @@
 window.onload = (event) => {
   console.log("page is fully loaded");
-  updateFilters("SELECT id, text_data, date FROM accommodation_log");
+  updateFilters("SELECT usersub, text_data, date FROM accommodation_log");
 };
 
 document.getElementById('send-btn').addEventListener('click', sendData);
 document.getElementById('filter-update').addEventListener('click', inputFilterData);
 document.getElementById('filter-clear').addEventListener('click', clearFilterData);
 document.getElementById("export-xlsx").addEventListener("click", exportTableToExcel);
-
-
 
 function clearFilterData(){
   document.getElementById('filtersearch').value = "";
@@ -25,6 +23,7 @@ function inputFilterData() {
   var searchText = document.getElementById("filtersearch").value;
   var filterDateStart = document.getElementById("filter-date-start").value;
   var filterDateEnd = document.getElementById("filter-date-end").value;
+  var filterUser = document.getElementById("filter-user").value;
   var isWholeWord = document.getElementById("isWhole").checked;
 
   // Add a day to the end date
@@ -43,24 +42,31 @@ function inputFilterData() {
     dateFilter = "AND date < '" + filterDateEnd + "'";
   }
 
+  var userFilter = "";
+  if (filterUser.length > 0) {
+    userFilter = "AND usersub = '" + filterUser + "'";
+  }
+
   if (searchText.length > 0) {
     if (isWholeWord) {
       output =
-        "SELECT id, text_data, date FROM accommodation_log WHERE text_data = '" +
+        "SELECT usersub, text_data, date FROM accommodation_log WHERE text_data = '" +
         searchText +
         "' " +
         dateFilter +
+        userFilter +
         ";";
     } else {
       output =
-        "SELECT id, text_data, date FROM accommodation_log WHERE text_data LIKE '%" +
+        "SELECT usersub, text_data, date FROM accommodation_log WHERE text_data LIKE '%" +
         searchText +
         "%' " +
         dateFilter +
+        userFilter +
         ";";
     }
   } else {
-    output = "SELECT id, text_data, date FROM accommodation_log" + (dateFilter.length > 0 ? " WHERE " + dateFilter.slice(4) : "") + ";";
+    output = "SELECT usersub, text_data, date FROM accommodation_log" + (dateFilter.length > 0 || userFilter.length > 0 ? " WHERE " + dateFilter.slice(4) + " " + userFilter.slice(4) : "") + ";";
   }
 
   console.log(output);
@@ -69,6 +75,7 @@ function inputFilterData() {
   document.getElementById('infotext').innerText = "Filters updated";
   updateFilters(output);
 }
+
 
 function updateFilters(x) {
   
@@ -102,6 +109,7 @@ function scrollToBottom() {
 
 function sendData() {
     const textData = document.getElementById('input-text').value;
+    const user = "tteven";
 
     if (document.getElementById('input-text').value.length > 0){
       console.log(textData);
@@ -128,7 +136,7 @@ function sendData() {
       };
   
       // Send the request
-      xhr.send('textData=' + textData);
+      xhr.send('textData=' + textData + '&usersub=' + user);
 
     }
     

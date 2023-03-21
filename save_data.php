@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
-$username = "root";
-$password = "MakoChan13!!";
+$username = "accommodation";
+$password = "accpass";
 $dbname = "acc_data";
 
 // Create connection
@@ -24,11 +24,13 @@ if (isset($_POST['textData'])) {
 // Get the current date
 $date = date('Y-m-d H:i:s');
 
+$user = $_POST['usersub'];
+
 // Prepare an SQL statement
-$stmt = $conn->prepare("INSERT INTO accommodation_log (text_data, date) VALUES (?, ?)");
+$stmt = $conn->prepare("INSERT INTO accommodation_log (usersub, text_data, date) VALUES (?, ?, ?)");
 
 // Bind parameters
-$stmt->bind_param("ss", $textData, $date);
+$stmt->bind_param("sss", $user, $textData, $date);
 
 // Execute the prepared statement
 if ($stmt->execute()) {
