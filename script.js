@@ -179,6 +179,7 @@ async function sendData() {
           document.getElementById('whatsgoingon').style.backgroundColor = "green";
           document.getElementById('whatsgoingon').style.Color = "black";
           document.getElementById('infotext').innerText = "Log Entered";
+          document.getElementById('input-text').value = "";
           refreshTable();        
         } else {
           console.error('An error occurred');

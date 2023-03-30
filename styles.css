@@ -10,6 +10,7 @@
 body{
     background-color: rgb(219, 219, 219);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 18px;
 }
 
 button{
@@ -39,7 +40,9 @@ table {
 #textgen{
     display:flex;
     flex-direction: column;
-    
+}
+textarea{
+    font-size: 18px;
 }
 #table-container{
     height: 95vh;
@@ -52,7 +55,6 @@ table {
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding-top: 40px;
 }
 #filters button{
     margin-bottom: 10px;
