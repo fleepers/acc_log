@@ -27,6 +27,7 @@ function clearFilterData(){
   document.getElementById('filter-date-start').value = "";
   document.getElementById('filter-date-end').value = "";
   document.getElementById("filter-user").value = "";
+  document.getElementById("tablename").selectedIndex = 0;
   inputFilterData();
   document.getElementById('whatsgoingon').style.backgroundColor = "green";
   document.getElementById('whatsgoingon').style.Color = "black";
@@ -43,10 +44,9 @@ async function login(){
 
       authtokenfound = accessToken;
       //console.log(authtokenfound);
-      document.getElementById('loginbox').remove();
-      document.getElementById('postlogin').style.visibility = "visible";
-      document.getElementById('postlogin').style.pointerEvents = "all";
-      
+      checkusername(await fetchusername(accessToken));
+
+
       } catch (error) {
           console.error(error);
           alert("Log-in failed. Error code: " + error);
@@ -69,63 +69,107 @@ async function fetchusername(token) {
   return displayName.split('@')[0];
   }
 
-function inputFilterData() {
-  var output = "";
-  var searchText = document.getElementById("filtersearch").value;
-  var filterDateStart = document.getElementById("filter-date-start").value;
-  var filterDateEnd = document.getElementById("filter-date-end").value;
-  var filterUser = document.getElementById("filter-user").value;
-  var isWholeWord = document.getElementById("isWhole").checked;
-
-  // Add a day to the end date
-  if (filterDateEnd.length > 0) {
-    var endDate = new Date(filterDateEnd);
-    endDate.setDate(endDate.getDate() + 1);
-    filterDateEnd = endDate.toISOString().slice(0, 10);
-  }
-
-  var dateFilter = "";
-  if (filterDateStart.length > 0 && filterDateEnd.length > 0) {
-    dateFilter = "AND date BETWEEN '" + filterDateStart + "' AND '" + filterDateEnd + "'";
-  } else if (filterDateStart.length > 0) {
-    dateFilter = "AND date >= '" + filterDateStart + "'";
-  } else if (filterDateEnd.length > 0) {
-    dateFilter = "AND date < '" + filterDateEnd + "'";
-  }
-
-  var userFilter = "";
-  if (filterUser.length > 0) {
-    userFilter = "AND usersub = '" + filterUser + "'";
-  }
-
-  if (searchText.length > 0) {
-    if (isWholeWord) {
-      output =
-        "SELECT usersub, text_data, date FROM accommodation_log WHERE text_data = '" +
-        searchText +
-        "' " +
-        dateFilter +
-        userFilter +
-        ";";
-    } else {
-      output =
-        "SELECT usersub, text_data, date FROM accommodation_log WHERE text_data LIKE '%" +
-        searchText +
-        "%' " +
-        dateFilter +
-        userFilter +
-        ";";
+  async function checkusername(inputString) {
+    try {
+      // Fetch the users.txt file
+      const response = await fetch('users.txt');
+      
+      // Check if the response is successful
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Read the content of the file as text
+      const fileContent = await response.text();
+  
+      // Split the content into an array of lines
+      const lines = fileContent.split('\n');
+  
+      // Iterate over each line to find a match
+      let matchFound = false;
+      for (const line of lines) {
+        if (line.trim() === inputString) {
+          console.log(`Username found: ${line}`);
+          matchFound = true;
+          document.getElementById('loginbox').remove();
+          document.getElementById('postlogin').style.visibility = "visible";
+          document.getElementById('postlogin').style.pointerEvents = "all";
+          break;
+        }
+      }
+  
+      // If no match found, throw an error
+      if (!matchFound) {
+        alert("Access Denied. You are not in the authorized list of staff to use this. If this is an error, please contact itservices@grantham.ac.uk");
+        throw new Error('Username not found');
+      }
+    } catch (error) {
+      console.error(error);
+      return error;
     }
-  } else {
-    output = "SELECT usersub, text_data, date FROM accommodation_log" + (dateFilter.length > 0 || userFilter.length > 0 ? " WHERE " + dateFilter.slice(4) + " " + userFilter.slice(4) : "") + ";";
   }
+  
 
-  console.log(output);
-  document.getElementById('whatsgoingon').style.backgroundColor = "green";
-  document.getElementById('whatsgoingon').style.Color = "black";
-  document.getElementById('infotext').innerText = "Filters updated";
-  updateFilters(output);
-}
+  function inputFilterData() {
+    var output = "";
+    var searchText = document.getElementById("filtersearch").value;
+    var filterDateStart = document.getElementById("filter-date-start").value;
+    var filterDateEnd = document.getElementById("filter-date-end").value;
+    var filterUser = document.getElementById("filter-user").value;
+    var isWholeWord = document.getElementById("isWhole").checked;
+    var tableName = document.getElementById("tablename").value;
+
+
+    // Add a day to the end date
+    if (filterDateEnd.length > 0) {
+      var endDate = new Date(filterDateEnd);
+      endDate.setDate(endDate.getDate() + 1);
+      filterDateEnd = endDate.toISOString().slice(0, 10);
+    }
+  
+    var dateFilter = "";
+    if (filterDateStart.length > 0 && filterDateEnd.length > 0) {
+      dateFilter = "AND date BETWEEN '" + filterDateStart + "' AND '" + filterDateEnd + "'";
+    } else if (filterDateStart.length > 0) {
+      dateFilter = "AND date >= '" + filterDateStart + "'";
+    } else if (filterDateEnd.length > 0) {
+      dateFilter = "AND date < '" + filterDateEnd + "'";
+    }
+  
+    var userFilter = "";
+    if (filterUser.length > 0) {
+      userFilter = "AND usersub = '" + filterUser + "'";
+    }
+  
+    if (searchText.length > 0) {
+      if (isWholeWord) {
+        output =
+          "SELECT usersub, text_data, date FROM " + tableName + " WHERE text_data = '" +
+          searchText +
+          "' " +
+          dateFilter +
+          userFilter +
+          ";";
+      } else {
+        output =
+          "SELECT usersub, text_data, date FROM " + tableName + " WHERE text_data LIKE '%" +
+          searchText +
+          "%' " +
+          dateFilter +
+          userFilter +
+          ";";
+      }
+    } else {
+      output = "SELECT usersub, text_data, date FROM " + tableName + (dateFilter.length > 0 || userFilter.length > 0 ? " WHERE " + dateFilter.slice(4) + " " + userFilter.slice(4) : "") + ";";
+    }
+  
+    console.log(output);
+    document.getElementById('whatsgoingon').style.backgroundColor = "green";
+    document.getElementById('whatsgoingon').style.Color = "black";
+    document.getElementById('infotext').innerText = "Filters updated";
+    updateFilters(output);
+  }
+  
 
 
 function updateFilters(x) {
