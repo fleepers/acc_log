@@ -283,7 +283,7 @@ function exportTableToExcel() {
 
     const dateCell = ws[XLSX.utils.encode_cell({ c: 2, r: i })];
     dateCell.t = "d"; // Set the cell type to 'date'
-    dateCell.z = "yyyy-mm-dd h:mm:ss"; // Set the date format
+    dateCell.z = "dd-mm-yyyy h:mm:ss"; // Set the date format
   }
 
   // Set the column widths

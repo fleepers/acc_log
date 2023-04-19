@@ -4,6 +4,8 @@ $username = "accommodation";
 $password = "accpass";
 $dbname = "acc_data";
 
+date_default_timezone_set("Europe/London");
+
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -22,7 +24,7 @@ if (isset($_POST['textData'])) {
   }
 
 // Get the current date
-$date = date('Y-m-d H:i:s');
+$date = date('d-m-Y H:i:s');
 
 $user = $_POST['usersub'];
 
